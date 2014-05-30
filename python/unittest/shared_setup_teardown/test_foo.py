@@ -1,4 +1,4 @@
-# Run with 'pytest -s'
+# Run with 'pytest test_foo.py -s'
 #
 # See also:
 # http://nedbatchelder.com/blog/201210/multiple_inheritance_is_hard.html
