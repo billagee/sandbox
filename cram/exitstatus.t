@@ -11,7 +11,8 @@ below the command's output.
 
 Note that the exit status of a subshell bubbles up to the parent shell:
 
-  $ $(exit 99)
+  $ (echo 'hi from a subshell!' && exit 99)
+  hi from a subshell!
   [99]
 
 This will cause a failure since the exit status 1 from false isn't handled:
