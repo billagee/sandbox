@@ -13,12 +13,12 @@ cat << JSON_EOF > $JSON_FILENAME
   "foo": {
     "a_string": "foostring",
     "an_int": 1,
-    "an_optional_value": 2000000
+    "optional_value": 2000000
   },
   "bar": {
     "a_string": "barstring",
     "an_int": 2,
-    "an_optional_value": null
+    "optional_value": null
   },
   "baz": {
     "a_string": "bazstring",
@@ -29,8 +29,15 @@ JSON_EOF
 
 echo "jq version is $(jq --version)"
 
+# $1 is a jq filter to apply to $JSON_FILENAME. Output will be
+# raw text with no quotes introduced by JSON formatting.
+function rawfilter() {
+    echo $(jq --raw-output $1 ${JSON_FILENAME})
+}
+
 # Read all the JSON object's keys into a bash array
-an_array=( $(jq -r 'keys[]' ${JSON_FILENAME}) )
+an_array=( $(rawfilter 'keys[]' ${JSON_FILENAME}) )
+
 #printf "%s\n" ${an_array[@]}  # print keys
 #echo $(jq . ${JSON_FILENAME}) # print entire object
 
@@ -40,16 +47,15 @@ OUTPUT_ARRAY=()
 
 for the_key in ${an_array[@]}; do
     # Assign applet input vars using JSON data
-    a_string=$(jq -r .$the_key.a_string ${JSON_FILENAME})
-    #echo "a_string is: '${a_string}'"
-    an_int=$(jq -r .$the_key.an_int ${JSON_FILENAME})
-    an_optional_value=$(jq -r .$the_key.an_optional_value ${JSON_FILENAME})
+    a_string=$(rawfilter .$the_key.a_string)
+    an_int=$(rawfilter .$the_key.an_int)
+    optval=$(rawfilter .$the_key.optional_value)
 
     #echo "Building command string for $the_key..."
     cmd_to_run="echo the_key: $the_key ... a_string: $a_string ... an_int: $an_int"
 
-    if [ $an_optional_value != "null" ] ; then
-        cmd_to_run="${cmd_to_run} ... an_optional_value: ${an_optional_value}"
+    if [ $optval != "null" ] ; then
+        cmd_to_run="${cmd_to_run} ... optional_value: ${optval}"
     fi
 
     # Execute command
