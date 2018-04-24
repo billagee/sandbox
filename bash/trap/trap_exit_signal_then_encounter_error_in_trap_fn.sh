@@ -9,11 +9,14 @@ function finish {
 "
     echo "In finish function...pending exit status should be 99." >&2
 
-    # ...then when something else goes wrong here, -e makes us exit
-    # with the new error status instead of the original one (in $1):
+    # ...then when something else goes wrong here, -e would make us exit
+    # with new error status instead of the original code (in $1), unless
+    # we `set +e` like so:
+    set +e
     false
+    #set -e
 
-    # Note this will never be reached:
+    # Note this would never be reached without that `set +e`:
     echo "All done with cleanup, exiting..." >&2
     exit "$1"
 }
