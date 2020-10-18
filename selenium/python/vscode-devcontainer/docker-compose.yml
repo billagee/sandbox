@@ -1,0 +1,19 @@
+version: '3.7'
+
+services:
+  selenium-client:
+    image: mcr.microsoft.com/vscode/devcontainers/python:3.8
+    depends_on:
+      - selenium-server
+
+  selenium-server:
+    image: elgalu/selenium:3.141.59-p41
+    environment:
+      - VIDEO=true
+      - VNC_PASSWORD=password
+      - TZ="US/Pacific"
+    volumes:
+      - /dev/shm:/dev/shm
+    # Publish VNC port 5900 to the host:
+    ports:
+      - "5900:25900"
