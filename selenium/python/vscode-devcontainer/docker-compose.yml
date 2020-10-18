@@ -9,7 +9,7 @@ services:
   selenium-server:
     image: elgalu/selenium:3.141.59-p41
     environment:
-      - VIDEO=true
+      - VIDEO=false
       - VNC_PASSWORD=password
       - TZ="US/Pacific"
     volumes:
